@@ -1,0 +1,31 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @job_request %>
+
+<% if @job_request.booking.present? %>
+  <hr>
+  <div class="booking-details" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0;">
+    <h3>Booking Details</h3>
+    <p><strong>Status:</strong> <%= @job_request.booking.booking_status.titleize %></p>
+    <p><strong>Provider:</strong> <%= @job_request.provider&.name || "Assigned" %></p>
+    
+    <% if @job_request.booking.scheduled_at.present? %>
+      <p><strong>Scheduled For:</strong> 
+         <span style="color: #007bff;">
+           <%= @job_request.booking.scheduled_at.strftime("%B %d, %Y at %I:%M %p") %>
+         </span>
+      </p>
+    <% else %>
+      <p><em>Schedule pending provider input...</em></p>
+    <% end %>
+  </div>
+  <hr>
+<% end %>
+
+<div>
+  <%# We keep your existing links below %>
+  <%= link_to "Edit this job request", edit_job_request_path(@job_request) %> |
+  <%= link_to "Back to job requests", job_requests_path %>
+
+  <%= button_to "Destroy this job request", @job_request, method: :delete %>
+</div>

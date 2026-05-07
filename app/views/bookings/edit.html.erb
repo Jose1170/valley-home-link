@@ -1,0 +1,27 @@
+<h1>Set Meeting Schedule</h1>
+
+<h1>Set Meeting Schedule</h1>
+
+<% if @booking.errors.any? %>
+  <div style="color: red; border: 1px solid red; padding: 10px; margin-bottom: 20px;">
+    <h3><%= pluralize(@booking.errors.count, "error") %> prevented this schedule from saving:</h3>
+    <ul>
+      <% @booking.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with(model: @booking, local: true) do |f| %>
+  <div style="margin-bottom: 20px;">
+    <%= f.label :scheduled_at, "Select Date and Time" %><br>
+    <%# Using datetime_field is often more compatible with modern browsers %>
+    <%= f.datetime_field :scheduled_at, style: "padding: 8px; border-radius: 4px; border: 1px solid #ccc;" %>
+  </div>
+
+  <%= f.submit "Confirm Schedule", style: "background-color: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;" %>
+<% end %>
+
+<hr>
+<%= link_to "Back to Job", job_request_path(@booking.job_request) %>

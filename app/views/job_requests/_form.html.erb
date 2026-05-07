@@ -1,0 +1,65 @@
+<%= form_with(model: job_request) do |form| %>
+  <% if job_request.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(job_request.errors.count, "error") %> prohibited this job_request from being saved:</h2>
+
+      <ul>
+        <% job_request.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div style="margin-bottom: 15px;">
+    <%= form.label :service_category_id, "Service Category" %>
+    <%= form.collection_select :service_category_id, ServiceCategory.all, :id, :name, { prompt: "Select a Category" }, { style: "display: block; width: 100%; padding: 0.375rem 0.75rem;" } %>
+  </div>
+
+  <div style="margin-bottom: 15px;">
+    <%= form.label :job_title, style: "display: block" %>
+    <%= form.text_field :job_title, style: "display: block; width: 100%; padding: 0.375rem 0.75rem;" %>
+  </div>
+
+  <%# --- NEW: Direct Text Entry for Address --- %>
+  <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 6px;">
+    <h3>Service Location</h3>
+    
+    <%= form.fields_for :address do |address_form| %>
+      <div style="margin-bottom: 10px;">
+        <%= address_form.label :street_address, "Street Address" %>
+        <%= address_form.text_field :street_address, style: "display: block; width: 100%;" %>
+      </div>
+
+      <div style="margin-bottom: 10px;">
+        <%= address_form.label :city, "City" %>
+        <%= address_form.text_field :city, style: "display: block; width: 100%;" %>
+      </div>
+
+      <div style="margin-bottom: 10px;">
+        <%= address_form.label :state, "State" %>
+        <%= address_form.text_field :state, style: "display: block; width: 100%;" %>
+      </div>
+
+      <div style="margin-bottom: 10px;">
+        <%= address_form.label :zip_code, "Zip Code" %>
+        <%= address_form.text_field :zip_code, style: "display: block; width: 100%;" %>
+      </div>
+    <% end %>
+  </div>
+  <%# ---------------------------------------- %>
+
+  <div style="margin-bottom: 15px;">
+    <%= form.label :job_description, style: "display: block" %>
+    <%= form.text_area :job_description, style: "display: block; width: 100%; padding: 0.375rem 0.75rem;" %>
+  </div>
+
+  <div style="margin-bottom: 15px;">
+    <%= form.label :job_status %>
+    <%= form.select :job_status, JobRequest.job_statuses.keys.map { |status| [status.titleize, status] }, {}, { style: "display: block; width: 100%; padding: 0.375rem 0.75rem;" } %>
+  </div>
+
+  <div style="margin-top: 20px;">
+    <%= form.submit "Save Job Request", style: "background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer;" %>
+  </div>
+<% end %>

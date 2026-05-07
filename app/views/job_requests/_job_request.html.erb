@@ -1,0 +1,28 @@
+<div id="<%= dom_id job_request %>" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+  
+  <%# Main Content (Title and Description) %>
+  <div style="margin-bottom: 15px;">
+    <h2 style="margin: 0 0 5px 0;"><%= job_request.job_title %></h2>
+    <p style="color: #555; line-height: 1.4;"><%= job_request.job_description %></p>
+  </div>
+
+  <hr style="border: 0; border-top: 1px solid #eee;">
+
+  <%# Small Status Footer %>
+  <div style="font-size: 0.85rem; color: #777;">
+    <%= form_with(model: job_request) do |form| %>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <strong>Status:</strong>
+        
+        <%= form.select :job_status, 
+            JobRequest.job_statuses.keys.map { |s| [s.humanize, s] }, 
+            {}, 
+            { style: "padding: 2px 5px; font-size: 0.85rem;" } %>
+            
+        <%= form.submit "Update", 
+            style: "padding: 2px 8px; font-size: 0.8rem; cursor: pointer;" %>
+      </div>
+    <% end %>
+  </div>
+
+</div>

@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  provider: one
+  service_category: one
+  base_price: 9.99
+  status: 1
+
+two:
+  provider: two
+  service_category: two
+  base_price: 9.99
+  status: 1

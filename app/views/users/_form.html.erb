@@ -1,0 +1,32 @@
+<%= form_with(model: user) do |form| %>
+  <% if user.errors.any? %>
+    <div style="color: red; border: 1px solid red; padding: 10px; margin-bottom: 20px;">
+      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+      <ul>
+        <% user.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div style="margin-bottom: 15px;">
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div style="margin-bottom: 15px;">
+    <%= form.label :email, style: "display: block" %>
+    <%= form.text_field :email %>
+  </div>
+
+  <%# We replaced the number_field with this dropdown %>
+  <div style="margin-bottom: 15px;">
+    <%= form.label :role, "Account Type", style: "display: block" %>
+    <%= form.select :role, User.roles.keys.map { |r| [r.humanize, r] }, { prompt: "Select your role" } %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Register Account" %>
+  </div>
+<% end %>

@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  job_request: one
+  user: one
+  booking_status: 1
+
+two:
+  job_request: two
+  user: two
+  booking_status: 1

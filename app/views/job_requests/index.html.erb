@@ -1,0 +1,73 @@
+
+
+<h1>Service Marketplace</h1>
+
+<%# --- NEW: Category Filter Dropdown --- %>
+<div style="margin-bottom: 20px; padding: 15px; background: #f9f9f9; border-radius: 8px;">
+  <%= form_with url: job_requests_path, method: :get, local: true do |f| %>
+    <%= f.label :service_category_id, "Filter by Category:" %>
+    <%= f.collection_select :service_category_id, ServiceCategory.all, :id, :name, include_blank: "All Categories" %>
+    <%= f.submit "Filter", style: "cursor: pointer;" %>
+  <% end %>
+</div>
+
+<div id="job_requests">
+  <% if @job_requests.present? && @job_requests.any? %>
+    <% @job_requests.each do |job_request| %>
+      <div style="border: 1px solid #ccc; padding: 20px; margin-bottom: 20px; border-radius: 8px;">
+        
+        <h2 style="margin-top: 0;"><%= job_request.job_title %></h2>
+
+        <p><strong>Category:</strong> <span style="background: #e9ecef; padding: 2px 6px; border-radius: 4px;"><%= job_request.service_category&.name || "General" %></span></p>
+        
+        <p><strong>Location:</strong> <%= job_request.address&.city || "Remote/TBD" %></p>
+
+        <p><strong>Description:</strong> <%= job_request.job_description %></p>
+
+        <p><strong>Status:</strong> 
+          <span style="color: <%= job_request.open? ? 'green' : 'orange' %>;">
+            <%= job_request.job_status.capitalize %>
+          </span>
+        </p>
+
+        <% if job_request.assigned? && job_request.provider %>
+          <p style="color: #007bff;"><strong>Accepted by:</strong> <%= job_request.provider.name %></p>
+
+          <% if job_request.booking&.scheduled_at.present? %>
+            <p style="color: #28a745;">
+              <strong>🗓 Scheduled:</strong> 
+              <%= job_request.booking.scheduled_at.strftime("%B %d, %I:%M %p") %>
+            </p>
+          <% end %>
+        <% end %>
+
+        <div style="margin-top: 10px;">
+          <%= link_to "Show", job_request %>
+
+          <% if current_user.admin? %>
+            | <%= link_to "Edit", edit_job_request_path(job_request) %>
+          <% end %>
+
+          <% if current_user.provider? && job_request.open? %>
+            | <%= button_to "Accept Job", accept_job_request_path(job_request), 
+                  method: :patch, 
+                  data: { confirm: "Are you sure you want to take this job?" },
+                  style: "background-color: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; display: inline;" %>
+          <% end %>
+
+          <%# --- FIXED SYNTAX: Notice the removed = sign after the first tag --- %>
+          <% if current_user.id == job_request.customer_id %>
+            | <%= link_to "Edit", edit_job_request_path(job_request) %>
+            | <%= button_to "Destroy", job_request, method: :delete, data: { confirm: "Are you sure?" }, style: "background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; display: inline;" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <p style="color: #6c757d; font-style: italic; margin-top: 20px;">No job requests found for the selected category.</p>
+  <% end %>
+</div>
+
+<% if current_user.customer? || current_user.admin? %>
+  <%= link_to "New job request", new_job_request_path, style: "display: inline-block; margin-top: 20px;" %>
+<% end %>

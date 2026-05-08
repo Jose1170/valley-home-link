@@ -31,6 +31,9 @@
               <span class="badge bg-primary ms-1"><%= current_user.role.capitalize %></span>
             </span>
             <%= button_to "Log Out", logout_path, method: :delete, class: "btn btn-outline-danger btn-sm" %>
+          <% else %>
+            <%= link_to "Login", login_path, class: "nav-link" %>
+            <%= link_to "Sign Up", signup_path, class: "btn btn-primary btn-sm ms-lg-2" %>
           <% end %>
         </div>
       </div>

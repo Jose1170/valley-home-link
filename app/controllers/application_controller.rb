@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
-  before_action :authenticate_user
+  before_action :authenticate_user!
 
   allow_browser versions: :modern
   
@@ -12,12 +12,11 @@ class ApplicationController < ActionController::Base
   end
 
   # Add the exclamation mark alias so authenticate_user! works
-  def authenticate_user
-    redirect_to login_path unless current_user
+  def authenticate_user!
+    unless current_user
+     redirect_to login_path, alert: "Please log in to continue."
+    end
   end
-
-  # Retain standard authenticate_user if it is called elsewhere
-  alias_method :authenticate_user!, :authenticate_user
 
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes

@@ -8,11 +8,9 @@ class JobRequest < ApplicationRecord
 
   has_one :booking, dependent: :destroy
 
-  # Assign the customer's ID to the address before checking validations
   before_validation :assign_address_user
 
-  accepts_nested_attributes_for :address, 
-                                reject_if: ->(attributes) { attributes['street_address'].blank? && attributes['city'].blank? }
+  accepts_nested_attributes_for :address, reject_if: ->(attributes) { attributes['street_address'].blank? && attributes['city'].blank? }
 
   private
 

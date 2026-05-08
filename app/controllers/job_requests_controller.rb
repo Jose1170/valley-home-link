@@ -83,10 +83,7 @@ class JobRequestsController < ApplicationController
 
         @job_request.update!(job_status: :assigned, provider_id: current_user.id)
         
-        @booking = Booking.create!(
-          job_request: @job_request,
-          user: current_user,
-          booking_status: :confirmed
+        @booking = Booking.create!(job_request: @job_request, user: current_user, booking_status: :confirmed
         )
       end
       

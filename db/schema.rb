@@ -76,6 +76,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_07_032632) do
   add_foreign_key "addresses", "users"
   add_foreign_key "bookings", "job_requests"
   add_foreign_key "bookings", "users"
-  add_foreign_key "provider_services", "providers"
+  add_foreign_key "provider_services", "users", column: "provider_id"
   add_foreign_key "provider_services", "service_categories"
 end

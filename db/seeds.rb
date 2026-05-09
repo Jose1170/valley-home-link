@@ -9,111 +9,61 @@ end
 
 puts "Successfully seeded #{ServiceCategory.count} categories!"
 
-=begin
 # 1. Clear old data to avoid duplicates, order is important!
 
 puts "Cleaning database..."
-
 Booking.destroy_all
-
 JobRequest.destroy_all
-
 Address.destroy_all
-
+ProviderService.destroy_all # Added this to clear join table
 User.destroy_all
-
 ServiceCategory.destroy_all
 
-
-
-# 2. Seed Service Categories
-
+puts "Seeding Service Categories..."
 categories = ["Plumbing", "Electrical", "Landscaping", "Cleaning", "General"]
+categories.each { |name| ServiceCategory.find_or_create_by!(name: name) }
 
-categories.each do |name|
-
-  ServiceCategory.find_or_create_by!(name: name)
-
-end
-
-puts "Seeded #{ServiceCategory.count} categories."
-
-
-
-# 3. Seed Admin User
-
+puts "Seeding Users..."
+# Seed Admin
 admin = User.find_or_create_by!(email: 'admin@test.com') do |u|
-
   u.name = "System Admin"
-
+  u.username = "admin"
   u.password = 'password123'
-
-  u.role = 'admin'
-
+  u.role = :admin
 end
 
-
-
-# 4. Seed Provider User
-
+# Seed Provider
 provider = User.find_or_create_by!(email: 'provider_test@test.com') do |u|
-
   u.name = "John Provider"
-
+  u.username = "provider"
   u.password = 'password123'
-
-  u.role = 'provider'
-
+  u.role = :provider
 end
 
-
-
-# 5. Seed Customer User
-
+# Seed Customer
 customer = User.find_or_create_by!(email: 'customer_test@test.com') do |u|
-
   u.name = "Jane Customer"
-
+  u.username = "customer"
   u.password = 'password123'
-
-  u.role = 'customer'
-
+  u.role = :customer
 end
 
-
-
-# 6. Seed Address for the Customer (Crucial for the "Service Location" feature)
-
-Address.find_or_create_by!(user: customer) do |a|
-
-  a.street = "1201 W University Dr"
-
+puts "Seeding Address..."
+addr = Address.find_or_create_by!(user: customer) do |a|
+  a.street_address = "1201 W University Dr"
   a.city = "Edinburg"
-
   a.state = "TX"
-
   a.zip_code = "78539"
-
 end
 
-
-
-# 7. Seed an Initial Job Request (To show the marketplace is working)
-
+puts "Seeding Job Request..."
 JobRequest.create!(
-
   customer_id: customer.id,
-
-  service_category: ServiceCategory.find_by(name: "Plumbing"),
-
+  address_id: addr.id, # Added this to satisfy the relationship
+  service_category_id: ServiceCategory.find_by(name: "Plumbing").id, # Use ID for Postgres safety
+  job_title: "Emergency Plumbing",
   job_description: "Fixing a leaky faucet in the kitchen.",
-
-  job_status: "open"
-
+  job_status: 0 # Using integer for status
 )
 
-
-
-puts "Successfully seeded database with Users, Addresses, and a sample Job Request!"
-
-=end
+puts "Successfully seeded!"
